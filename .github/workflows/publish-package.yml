@@ -6,7 +6,7 @@ on:
 
 jobs:
   publish:
-    if: github.actor === "devinmarra"
+    if: github.actor == "devinmarra"
     runs-on: ubuntu-latest
     permissions:
       packages: write
