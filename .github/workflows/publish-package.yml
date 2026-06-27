@@ -32,26 +32,19 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build
-          path: |
-            lib/
-            package.json
-            README.md
-            LICENSE
-            CHANGELOG.md
-
+          path: lib/
+    
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write   # required for provenance
+      id-token: write
     steps:
-      - uses: actions/checkout@v4
-
       - uses: actions/download-artifact@v4
         with:
           name: build
-          path: .
+          path: lib
 
       - uses: actions/setup-node@v4
         with:
@@ -62,13 +55,11 @@ jobs:
         run: |
           cd lib
           if [ "${{ needs.build.outputs.prerelease }}" = "true" ]; then
-            echo "Publishing prerelease to npm with tag 'next'"
             npm publish --access public --tag next --provenance
           else
-            echo "Publishing stable release to npm"
             npm publish --access public --provenance
           fi
-          
+
   publish-github:
     needs: build
     runs-on: ubuntu-latest
@@ -76,12 +67,10 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v4
-
       - uses: actions/download-artifact@v4
         with:
           name: build
-          path: .
+          path: lib
 
       - uses: actions/setup-node@v4
         with:
@@ -95,9 +84,7 @@ jobs:
         run: |
           cd lib
           if [ "${{ needs.build.outputs.prerelease }}" = "true" ]; then
-            echo "Publishing prerelease to GitHub Packages with tag 'next'"
             npm publish --tag next
           else
-            echo "Publishing stable release to GitHub Packages"
             npm publish
           fi
