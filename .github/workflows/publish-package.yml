@@ -30,5 +30,10 @@ jobs:
         working-directory: ./lib
         run: npm publish
         if: ${{ always() }}
+
+      - name: publish package
+        working-directory: ./lib
+        run: npm publish --registry https://npm.pkg.github.com
+        if: ${{ always() }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_GITHUB_PACKAGES_TOKEN }}
