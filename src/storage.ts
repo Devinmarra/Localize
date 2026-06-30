@@ -1,5 +1,3 @@
-import { cache } from "./cache";
-
 export type LocalizeStore = {
     locale: string;
     messages: Record<string, unknown>;
@@ -27,14 +25,11 @@ export type LocalizeInstance = {
  * (e.g. user locale vs. fallback locale) to coexist without shared state.
  */
 export function createLocalizeInstance(defaultLocale = "en-US"): LocalizeInstance {
-    const storeCache = cache(
-        (): LocalizeStore => ({
-            locale: defaultLocale,
-            messages: {},
-            pending: new Map(),
-        }),
-    );
-    const store = storeCache();
+    const store: LocalizeStore = {
+        locale: defaultLocale,
+        messages: {},
+        pending: new Map(),
+    };
 
     return {
         getLocale: () => store.locale,
